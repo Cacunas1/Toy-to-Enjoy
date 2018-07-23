@@ -105,4 +105,4 @@ Reviews_All <- rbind(answer1, answer2, answer3, answer4, answer5)
 
 # save scrapping ----------------------------------------------------------
 
-write.csv(Reviews_All, file = "../output/scrapped_reviews.csv")
+write.csv(Reviews_All, file = "../input/scrapped_reviews.csv")

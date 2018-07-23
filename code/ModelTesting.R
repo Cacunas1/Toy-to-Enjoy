@@ -3,7 +3,7 @@
 
 rm(list = ls())
 
-setwd("Z:/Cristian Acuna/Module 2/Research Project/Toy to Enjoy/code")
+# setwd("Z:/Cristian Acuna/Module 2/Research Project/Toy to Enjoy/code")
 
 library(magrittr)
 library(readr)
@@ -21,7 +21,7 @@ library(tictoc)
 
 # Load data ---------------------------------------------------------------
 
-reviews <- read_csv("../input/reviews.csv")
+reviews <- read_csv("../input/scrapped_reviews.csv")
 reviews <- reviews[, -1]
 reviews <- reviews[!(is.na(reviews$Review) | reviews$Review == ""), ]
 reviews$Review %<>%  iconv("ASCII//TRANSLIT")
@@ -63,13 +63,13 @@ clean_reviews <- clean_corpus(reviews_com_corpus)
 
 # Building DTM ------------------------------------------------------------
 
-reviews_dtm <- 
+reviews_dtm <-
 	DocumentTermMatrix(
-		clean_reviews, 
+		clean_reviews,
 		list(
 			removePunctuation = TRUE,
 			removeNumbers = TRUE,
-			stopwords = TRUE, 
+			stopwords = TRUE,
 			weighting = weightTfIdf))
 
 reviews_matrix <- as.matrix(reviews_dtm)
@@ -112,7 +112,7 @@ toc()
 
 tic("RandomForest with num.trees=50")
 
-ranger_model <- train(x = train[, -ncol(train)], 
+ranger_model <- train(x = train[, -ncol(train)],
 					  y = train$Score,
 					  method = "ranger",
 					  num.trees = 50)
@@ -135,7 +135,7 @@ toc()
 
 tic("kNN")
 
-knn_model <- train(x = train[, -ncol(train)], 
+knn_model <- train(x = train[, -ncol(train)],
 				   y = train$Score,
 				   method = "knn")
 knn_pred <- predict(knn_model, test[,-ncol(test)])
