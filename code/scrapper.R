@@ -7,6 +7,7 @@ library(tidyverse)
 library(stringr)
 library(rebus)
 library(lubridate)
+library(magrittr)
 
 # Function definitions ----------------------------------------------------
 
@@ -29,31 +30,29 @@ Scrap <- function(urlAddr){
 	new_rating <- c(only_stars[4:13])
 
 	# Extracting comments
-
-	Comment <- html_nodes(webpage,".review-text , .a-spacing-top-mini .a-size-base") %>% html_text()
+	Comment <- html_nodes(webpage, ".review-text , .a-spacing-top-mini .a-size-base") %>% html_text()
 	new_comments <- c(Comment[3:13])
 	pos <- complete.cases(new_comments)
 	new_comments <- new_comments[pos]
 
 	Reviews <- cbind(Rating = new_rating, Review = new_comments) %>% as_tibble()
-	return (Reviews)
+	return(Reviews)
 }
 
 
 scrappe <- function(baseURL) {
-	download.file(baseURL, destfile = "scrapedpage.html", quiet = TRUE)
-
-	# Get the last page
 	scrapped <- "../output/scrapedpage.html"
+	download.file(baseURL, destfile = scrapped, quiet = TRUE)
 	webpage <- read_html(scrapped)
 
+	# Get the last page
 	latest_page_number <- get_last_page(webpage)
 
 	list_of_pages <- str_c(baseURL, "&pageNumber=", 1:latest_page_number)
 
 	answer <- tibble()
 
-	for (i in list_of_pages){
+	for (i in list_of_pages) {
 		answer %<>% rbind(Scrap(i))
 	}
 
